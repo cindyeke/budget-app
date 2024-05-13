@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+    @apply h-full text-grayblack;
+}

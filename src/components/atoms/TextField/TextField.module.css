@@ -1,0 +1,7 @@
+.textInput {
+    @apply border border-white;
+    @apply focus:outline-transparent focus:outline-0;
+    @apply placeholder:text-white text-white;
+    @apply rounded-lg w-full py-2 px-4 bg-transparent;
+    @apply text-sm xs:text-lg;
+}
