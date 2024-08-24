@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Button from '@/components/atoms/Button/Button'
 import TextField from '@/components/atoms/TextField/TextField'
-import BudgetCard from '@/components/organisms/BudgetCard/BudgetCard'
+import BudgetCard from '@/components/organisms/BudgetList/BudgetList'
 import Modal from '@/components/template/Modal/Modal'
 import AddIcon from '@/svgs/add.svg'
 import NewBudgetModal from '@/components/template/NewBudgetModal/NewBudgetModal'
@@ -31,10 +31,9 @@ export default function App() {
                 className="self-end"
             />
             <UpdateCurrencyModal hasDefaultCurrency={hasDefaultCurrency} />
-            <NewBudgetModal
-                openBudgetModal={openBudgetModal}
-                setOpenBudgetModal={setOpenBudgetModal}
-            />
+            {openBudgetModal && (
+                <NewBudgetModal setOpenBudgetModal={setOpenBudgetModal} />
+            )}
         </div>
     )
 }

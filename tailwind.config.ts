@@ -13,6 +13,8 @@ const config: Config = {
             gray: '#C5C6C7',
             turquoise: '#66FCF1',
             teal: '#45A29E',
+            lightteal: '#58bfba',
+            red: '#d6746d',
             white: '#FFFFFF',
             'off-white': '#F0F0F0',
             black: '#000000',

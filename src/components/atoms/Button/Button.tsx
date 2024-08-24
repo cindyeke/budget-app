@@ -33,15 +33,16 @@ const Button = ({
                 { 'flex-row-reverse': reverse },
                 { 'rounded-xl': rounded },
                 { 'opacity-60 cursor-not-allowed': disabled },
-                'flex items-center justify-center rounded-sm p-2',
+                'flex items-center justify-center rounded-sm p-2 gap-x-2',
                 'border-2 border-grayblack',
                 'text-sm xs:text-base'
             )}
             onClick={onClick}
             disabled={disabled}
         >
-            {isLoading ? <Loader /> : label}
-            {icon && <span className="ml-2">{icon}</span>}
+            {isLoading && <Loader />}
+            <span>{label}</span>
+            {icon && <span>{icon}</span>}
         </button>
     )
 }

@@ -1,0 +1,11 @@
+.descriptionField {
+    @apply !pl-[50px] !py-[15px] h-[60px] !w-[60%] overflow-hidden !border-r-[1px] !rounded-r-none !content-center;
+}
+
+.amountField {
+    @apply !pl-[20px] !py-[15px] h-[60px] overflow-hidden flex-1 !border-l-0 !rounded-l-none !content-center !border-r-4 !border-r-lightteal;
+}
+
+.checkbox {
+    @apply absolute transform top-1/2 -translate-y-1/2 left-4 mt-[1px];
+}

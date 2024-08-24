@@ -12,7 +12,7 @@ const TextField = ({ placeholder, type, className }: TextFieldProps) => {
         <input
             type={type}
             placeholder={placeholder}
-            className={clsx(styles.textInput, className)}
+            className={clsx(className, styles.textInput)}
         />
     )
 }
