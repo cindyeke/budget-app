@@ -2,3 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+    @apply h-full text-grayblack;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input,
+textarea {
+    @apply focus:outline focus:outline-white focus:outline-2 focus:outline-offset-[-2px];
+    @apply transition-[outline] ease-in-out duration-300;
+}
