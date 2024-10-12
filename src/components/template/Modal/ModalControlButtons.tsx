@@ -1,8 +1,11 @@
 import clsx from 'clsx'
 import Button from '@/components/atoms/Button/Button'
 import styles from './Modal.module.css'
+import { BUTTON, ButtonType } from '@/types/BudgetTypes'
 
 interface ModalControlButtonsProps {
+    prevBtnType?: ButtonType
+    nextBtnType?: ButtonType
     step: number
     handleGoBackToPrevStep?: () => void
     handleContinueStep?: () => void
@@ -15,6 +18,8 @@ interface ModalControlButtonsProps {
 }
 
 const ModalControlButtons = ({
+    prevBtnType = BUTTON,
+    nextBtnType = BUTTON,
     handleGoBackToPrevStep,
     handleContinueStep,
     omitPrevBtn = false,
@@ -27,7 +32,7 @@ const ModalControlButtons = ({
     return (
         <div className={clsx(className, 'flex justify-between mt-5')}>
             <Button
-                type="button"
+                type={prevBtnType}
                 label={prevBtnLabel}
                 onClick={handleGoBackToPrevStep}
                 className={clsx(btnClassName, styles.controlButton, {
@@ -35,7 +40,7 @@ const ModalControlButtons = ({
                 })}
             />
             <Button
-                type="button"
+                type={nextBtnType}
                 label={nextBtnLabel}
                 onClick={handleContinueStep}
                 className={clsx(btnClassName, styles.controlButton)}

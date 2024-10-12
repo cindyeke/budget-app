@@ -1,50 +1,110 @@
 import clsx from 'clsx'
-import { Dispatch, SetStateAction, useState } from 'react'
-import TextField from '@/components/atoms/TextField/TextField'
+import { v4 as uuidv4 } from 'uuid'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import {
+    BudgetItemOperation,
+    ADD,
+    DEDUCT,
+    NewBudgetInputs,
+    SUBMIT,
+    NewBudgetDetails,
+    BudgetItemDetails,
+} from '@/types/BudgetTypes'
 import Modal from '../Modal/Modal'
 import BudgetList from '@/components/organisms/BudgetList/BudgetList'
 import ModalContent from '../Modal/ModalContent'
 import ModalControlButtons from '../Modal/ModalControlButtons'
 import H1 from '@/components/atoms/H1/H1'
-import InfoCircle from '@/svgs/info-circle.svg'
 import AddIcon from '@/svgs/add.svg'
 import MinusIcon from '@/svgs/minus.svg'
-import TextArea from '@/components/atoms/TextArea/TextArea'
 import Button from '@/components/atoms/Button/Button'
-import { BudgetItemOperation, ADD, DEDUCT } from '@/types/BudgetTypes'
+import { StepOne, StepThree, StepTwo } from './NewBudgetSteps'
+
+const addBudgetButtonStyles =
+    '!p-0 !gap-x-0 !border-0 !w-10 !h-10 !rounded-[50%]'
+const addBudgetIconStyles = 'w-8 h-8 text-off-white'
 
 interface NewBudgetModalProps {
     setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
 }
 
-const textFieldStyle = 'mt-4'
-const addBudgetButtonStyles =
-    '!p-0 !gap-x-0 !border-0 !w-10 !h-10 !rounded-[50%]'
-const addBudgetIconStyles = 'w-8 h-8 text-off-white'
+const defaultNewBudgetDetails = {
+    id: '',
+    title: '',
+    income: '',
+}
 
 const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
     const [step, setStep] = useState(1)
+    const [newBudgetDetails, setNewBudgetDetails] = useState<NewBudgetDetails>(
+        defaultNewBudgetDetails
+    )
+    const [budgetTitle, setBudgetTitle] = useState('')
     const [isSavingNewBudget, setIsSavingNewBudget] = useState(false)
+    const [isAddNewButtonClicked, setIsAddNewButtonClicked] = useState(false)
     const [budgetItemOperation, setBudgetItemOperation] =
         useState<BudgetItemOperation>(ADD)
+    const [budgetList, setBudgetList] = useState<BudgetItemDetails[]>([])
+
+    const formMethods = useForm<NewBudgetInputs>({
+        defaultValues: defaultNewBudgetDetails,
+    })
 
     const handleGoBackToPrevStep = () => {
         step !== 1 && setStep((step) => step - 1)
     }
 
-    const handleContinueStep = () => {
-        const calculatedStep = step + 1
+    const handleNewBudget: SubmitHandler<NewBudgetInputs> = ({
+        income,
+        title,
+    }) => {
+        if (step === 4) {
+            setIsSavingNewBudget(true)
+            const storedBudgetList = localStorage.getItem('budgets')
 
-        if (calculatedStep === 4) {
+            let stringifiedBudgetList
+            const uniqueBudget = {
+                id: uuidv4(),
+                income,
+                title,
+                list: budgetList,
+            }
+            setTimeout(() => {
+                if (storedBudgetList) {
+                    const parsedBudgetList = JSON.parse(storedBudgetList)
+                    stringifiedBudgetList = JSON.stringify([
+                        ...parsedBudgetList,
+                        uniqueBudget,
+                    ])
+                } else {
+                    stringifiedBudgetList = JSON.stringify([uniqueBudget])
+                }
+
+                localStorage.setItem('budgets', stringifiedBudgetList)
+
+                setIsSavingNewBudget(false)
+                handleCloseModal()
+            }, 1000)
+        }
+        if (step === 3) {
             setIsSavingNewBudget(true)
             setTimeout(() => {
+                setNewBudgetDetails({
+                    id: uuidv4(),
+                    title,
+                    income,
+                })
                 setIsSavingNewBudget(false)
-                setStep((step) => step + 1)
-            }, 0)
-        } else {
-            setStep((step) => step + 1)
+                handleContinueStep()
+            }, 1000)
+        }
+        if (step < 3) {
+            handleContinueStep()
         }
     }
+
+    const handleContinueStep = () => setStep((step) => step + 1)
 
     const refresh = () => {
         setStep(1)
@@ -55,113 +115,113 @@ const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
         refresh()
     }
 
-    const title = `${step >= 4 ? 'Grocery' : 'Create a new'} budget` // the actual name of the will replace 'Edit'. ie. Grocery budget
+    const title = (budgetTitle: string): string => {
+        const budgetKeyword = 'budget'
+        const transformedTitle = budgetTitle.toLowerCase()
+        const trimmedTitle = transformedTitle.includes(budgetKeyword)
+            ? transformedTitle.replace(budgetKeyword, '')
+            : transformedTitle
+        return `${step >= 4 ? trimmedTitle.trim() : 'Create a new'} budget`
+    }
+
+    const handleAddBtn = () => {
+        setIsAddNewButtonClicked(true)
+        setBudgetItemOperation(ADD)
+    }
+
+    const handleDeductBtn = () => {
+        setIsAddNewButtonClicked(true)
+        setBudgetItemOperation(DEDUCT)
+    }
+
+    useEffect(() => {
+        setBudgetTitle(() => title(newBudgetDetails.title))
+    }, [newBudgetDetails.title])
 
     return (
         <Modal
             handleClose={handleCloseModal}
-            groupedContentClassName="p-5 overflow-scroll"
+            modalClassName="sm:!w-[550px] sm:!h-[70vh] sm:rounded-[20px]"
+            groupedContentClassName={`${step <= 3 ? 'p-5' : 'py-5'} overflow-scroll`}
         >
-            <ModalContent className="flex flex-col">
-                <div className="flex mb-2 items-center">
-                    <H1
-                        className={clsx('font-bold !mb-0', {
-                            'w-3/4': step > 3,
-                        })}
-                    >
-                        {title}
-                    </H1>
-                    {step > 3 && (
-                        <div className="flex flex-1 justify-between">
-                            <Button
-                                type="button"
-                                icon={
-                                    <AddIcon className={addBudgetIconStyles} />
-                                }
-                                className={clsx(
-                                    addBudgetButtonStyles,
-                                    '!bg-lightteal'
-                                )}
-                                onClick={() => setBudgetItemOperation(ADD)}
-                            />
-                            <Button
-                                type="button"
-                                icon={
-                                    <MinusIcon
-                                        className={addBudgetIconStyles}
-                                    />
-                                }
-                                className={clsx(
-                                    addBudgetButtonStyles,
-                                    'bg-red'
-                                )}
-                                onClick={() => setBudgetItemOperation(DEDUCT)}
-                            />
+            <FormProvider {...formMethods}>
+                <form
+                    onSubmit={formMethods.handleSubmit(handleNewBudget)}
+                    className="flex flex-col flex-1 overflow-scroll"
+                >
+                    <ModalContent className="flex flex-col">
+                        <div
+                            className={`flex mb-2 items-center justify-between ${step === 4 && 'pl-8 pr-5'}`}
+                        >
+                            <H1
+                                className={clsx('font-bold !mb-0', {
+                                    'w-[70%] capitalize': step > 3,
+                                })}
+                            >
+                                {budgetTitle}
+                            </H1>
+                            {step > 3 && (
+                                <AddNewBudgetItemButtons
+                                    handleAddBtn={handleAddBtn}
+                                    handleDeductBtn={handleDeductBtn}
+                                />
+                            )}
                         </div>
-                    )}
-                </div>
 
-                {step === 1 && <StepOne />}
-                {step === 2 && <StepTwo />}
-                {step === 3 && <StepThree />}
-                {step === 4 && <BudgetList operation={budgetItemOperation} />}
-            </ModalContent>
-            {step !== undefined && (
-                <ModalControlButtons
-                    step={step}
-                    handleContinueStep={handleContinueStep}
-                    handleGoBackToPrevStep={handleGoBackToPrevStep}
-                    nextBtnLabel={step >= 3 ? 'Save' : 'Continue'}
-                    omitPrevBtn={step === 1 || step === 4}
-                    isLoading={isSavingNewBudget}
-                />
-            )}
+                        {step === 1 && <StepOne />}
+                        {step === 2 && <StepTwo />}
+                        {step === 3 && <StepThree />}
+
+                        {step === 4 && (
+                            <BudgetList
+                                isAddNewButtonClicked={isAddNewButtonClicked}
+                                setIsAddNewButtonClicked={
+                                    setIsAddNewButtonClicked
+                                }
+                                newBudgetDetails={newBudgetDetails}
+                                operation={budgetItemOperation}
+                                setBudgetList={setBudgetList}
+                                budgetList={budgetList}
+                            />
+                        )}
+                    </ModalContent>
+                    <ModalControlButtons
+                        step={step}
+                        handleGoBackToPrevStep={handleGoBackToPrevStep}
+                        nextBtnLabel={step >= 3 ? 'Save' : 'Continue'}
+                        omitPrevBtn={step === 1 || step === 4}
+                        nextBtnType={SUBMIT}
+                        isLoading={isSavingNewBudget}
+                        className={`${step === 4 && 'px-5'}`}
+                    />
+                </form>
+            </FormProvider>
         </Modal>
     )
 }
 
-const StepOne = () => {
+const AddNewBudgetItemButtons = ({
+    handleAddBtn,
+    handleDeductBtn,
+}: {
+    handleAddBtn: () => void
+    handleDeductBtn: () => void
+}) => {
     return (
-        <TextField
-            type="number"
-            placeholder="Expected income"
-            className={textFieldStyle}
-        />
-    )
-}
-
-const StepTwo = () => {
-    return (
-        <TextField
-            type="text"
-            placeholder="Budget name"
-            className={textFieldStyle}
-        />
-    )
-}
-
-const StepThree = () => {
-    return (
-        <>
-            <TextArea
-                placeholder="Budget description"
-                className={clsx(textFieldStyle, 'h-[150px]')}
+        <div className="flex flex-1 justify-between max-w-[96px]">
+            <Button
+                type="button"
+                icon={<AddIcon className={addBudgetIconStyles} />}
+                className={clsx(addBudgetButtonStyles, '!bg-lightteal')}
+                onClick={handleAddBtn}
             />
-            <div className="flex items-start gap-x-2 mt-2">
-                <div>
-                    <InfoCircle className="w-5 h-5" />
-                </div>
-                <div className="text-sm">
-                    Feel free to skip this part if describing things isn't your
-                    cup of tea
-                    <span className="ml-1">
-                        {String.fromCodePoint(parseInt('0x1f605', 16))}
-                    </span>
-                    . Remember, you can edit the budget description at any time
-                    in the future.
-                </div>
-            </div>
-        </>
+            <Button
+                type="button"
+                icon={<MinusIcon className={addBudgetIconStyles} />}
+                className={clsx(addBudgetButtonStyles, 'bg-red')}
+                onClick={handleDeductBtn}
+            />
+        </div>
     )
 }
 

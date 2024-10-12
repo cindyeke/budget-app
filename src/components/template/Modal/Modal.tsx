@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import clsx from 'clsx'
+import { twMerge } from 'tailwind-merge'
 import styles from './Modal.module.css'
 import CloseSvg from '@/svgs/times.svg'
 
@@ -17,19 +17,22 @@ const Modal = ({
     groupedContentClassName,
 }: ModalProps) => {
     return (
-        <div className={clsx(modalClassName, styles.modal)}>
-            <div className="h-[50px] text-grayblack self-end cursor-pointer">
-                <CloseSvg className="w-6 h-6" onClick={handleClose} />
+        <>
+            <div className="bg-teal/40 absolute w-full h-full top-0 left-0"></div>
+            <div className={twMerge(styles.modal, modalClassName)}>
+                <div className="h-[50px] text-grayblack self-end cursor-pointer">
+                    <CloseSvg className="w-6 h-6" onClick={handleClose} />
+                </div>
+                <div
+                    className={twMerge(
+                        'flex flex-col flex-1',
+                        groupedContentClassName
+                    )}
+                >
+                    {children}
+                </div>
             </div>
-            <div
-                className={clsx(
-                    groupedContentClassName,
-                    'flex flex-col flex-1'
-                )}
-            >
-                {children}
-            </div>
-        </div>
+        </>
     )
 }
 

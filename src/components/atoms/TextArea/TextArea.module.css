@@ -1,7 +1,6 @@
 .textArea {
     @apply border border-white w-full bg-transparent resize-none;
-    @apply focus:outline-transparent focus:outline-0;
     @apply placeholder:text-white text-white;
     @apply rounded-lg w-full py-2 px-4;
-    @apply text-sm xs:text-lg;
+    @apply text-sm xs:text-base;
 }

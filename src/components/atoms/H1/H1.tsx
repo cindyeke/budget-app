@@ -8,7 +8,7 @@ interface H1Props {
 
 const H1 = ({ children, className }: H1Props) => {
     return (
-        <h1 className={clsx(className, 'text-2xl xs:text-4xl mb-2')}>
+        <h1 className={clsx(className, 'text-2xl mb-2')}>
             {children}
         </h1>
     )

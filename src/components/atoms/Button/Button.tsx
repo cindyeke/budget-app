@@ -1,11 +1,12 @@
 import clsx from 'clsx'
 import { ReactNode } from 'react'
 import Loader from '@/components/atoms/Loader/Loader'
+import { ButtonType } from '@/types/BudgetTypes'
 
 interface ButtonProps {
     label?: string
     reverse?: boolean
-    type: 'submit' | 'reset' | 'button'
+    type: ButtonType
     icon?: ReactNode
     onClick?: () => void
     className?: string

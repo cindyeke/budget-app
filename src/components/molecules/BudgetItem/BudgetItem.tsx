@@ -5,15 +5,60 @@ import {
     FocusEvent,
     FormEvent,
     ChangeEvent,
+    useEffect,
+    Dispatch,
+    SetStateAction,
 } from 'react'
+import clsx from 'clsx'
 import Checkbox from '@/components/atoms/Checkbox/Checkbox'
 import TextArea from '@/components/atoms/TextArea/TextArea'
+import { ADD, BudgetItemDetails } from '@/types/BudgetTypes'
+import DeleteIcon from '@/svgs/delete.svg'
 import styles from './BudgetItem.module.css'
 
-const BudgetItem = () => {
+import { formatAmountWithCurrency } from '@/utils/format'
+
+interface BudgetItemInterface {
+    budgetItem: BudgetItemDetails
+    isDefault?: boolean
+    handleDelete?: (id: string) => void
+    handleUpdate?: (
+        id: string,
+        key: keyof BudgetItemDetails,
+        value: string
+    ) => void
+}
+
+const BudgetItem = ({
+    budgetItem,
+    isDefault = false,
+    handleDelete,
+    handleUpdate,
+}: BudgetItemInterface) => {
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
     const amountRef = useRef<HTMLTextAreaElement>(null)
     const [amount, setAmount] = useState<string>()
+    const [description, setDescription] = useState<string>()
+
+    const {
+        id,
+        description: defaultDescription,
+        amount: budgettedAmount,
+        operation,
+    } = budgetItem
+
+    useEffect(() => {
+        setDescription(defaultDescription)
+        if (budgettedAmount) {
+            const formattedAmount = formatAmountWithCurrency(budgettedAmount)
+            setAmount(formattedAmount)
+        }
+    }, [])
+
+    const updateDescriptionField = (e: FormEvent<HTMLTextAreaElement>) => {
+        const { value } = e.currentTarget as HTMLTextAreaElement
+        setDescription(value)
+    }
 
     const handleChange = (ref: RefObject<HTMLTextAreaElement>) => {
         if (
@@ -48,22 +93,17 @@ const BudgetItem = () => {
     const handleAmountInput = (e: FormEvent<HTMLTextAreaElement>) => {
         const { value } = e.currentTarget as HTMLTextAreaElement
         setAmount(value)
+        handleUpdate && handleUpdate(id, 'amount', value || '0')
     }
 
     const handleAmountFieldOnBlur = (e: FocusEvent<HTMLTextAreaElement>) => {
         const amountValue = e.target.value
-
         if (amountValue === '' || parseInt(amountValue) === 0) {
             setAmount('')
             return
         }
-
-        const formattedNumber = new Intl.NumberFormat('en-NG', {
-            style: 'currency',
-            currency: 'NGN',
-            minimumFractionDigits: 0,
-        }).format(parseInt(amountValue))
-        setAmount(formattedNumber)
+        const formattedAmount = formatAmountWithCurrency(amountValue)
+        setAmount(formattedAmount)
     }
 
     const handleCheckboxToggle = (e: ChangeEvent) => {
@@ -72,28 +112,48 @@ const BudgetItem = () => {
     }
 
     return (
-        <div className="relative">
-            <Checkbox
-                className={styles.checkbox}
-                onChange={handleCheckboxToggle}
-            />
-            <div className="flex w-full">
-                <TextArea
-                    ref={descriptionRef}
-                    placeholder=""
-                    className={styles.descriptionField}
-                    onChange={() => handleChange(descriptionRef)}
+        <div className="flex items-center">
+            {!isDefault && (
+                <DeleteIcon
+                    className="absolute left-0 w-[20px] h-[20px] cursor-pointer"
+                    onClick={() => handleDelete && handleDelete(id)}
                 />
-                <TextArea
-                    ref={amountRef}
-                    placeholder=""
-                    className={styles.amountField}
-                    onChange={() => handleChange(amountRef)}
-                    onBlur={handleAmountFieldOnBlur}
-                    onFocus={handleAmountFieldFocus}
-                    onInput={handleAmountInput}
-                    value={amount}
-                />
+            )}
+            <div className="relative w-full">
+                {!isDefault && (
+                    <Checkbox
+                        className={styles.checkbox}
+                        onChange={handleCheckboxToggle}
+                    />
+                )}
+                <div className="flex w-full">
+                    <TextArea
+                        ref={descriptionRef}
+                        className={styles.descriptionField}
+                        onChange={() => handleChange(descriptionRef)}
+                        onBlur={() =>
+                            handleUpdate &&
+                            handleUpdate(id, 'description', description || '')
+                        }
+                        onInput={updateDescriptionField}
+                        value={description}
+                    />
+                    <TextArea
+                        ref={amountRef}
+                        className={clsx(
+                            styles.amountField,
+                            operation === ADD
+                                ? '!border-r-lightteal'
+                                : '!border-r-red'
+                        )}
+                        onChange={() => handleChange(amountRef)}
+                        onBlur={handleAmountFieldOnBlur}
+                        onFocus={handleAmountFieldFocus}
+                        onInput={handleAmountInput}
+                        value={amount}
+                        disabled={isDefault}
+                    />
+                </div>
             </div>
         </div>
     )
