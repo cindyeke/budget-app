@@ -6,8 +6,6 @@ import {
     FormEvent,
     ChangeEvent,
     useEffect,
-    Dispatch,
-    SetStateAction,
 } from 'react'
 import clsx from 'clsx'
 import Checkbox from '@/components/atoms/Checkbox/Checkbox'
@@ -39,6 +37,7 @@ const BudgetItem = ({
     const amountRef = useRef<HTMLTextAreaElement>(null)
     const [amount, setAmount] = useState<string>()
     const [description, setDescription] = useState<string>()
+    const [isFieldFocused, setIsFieldFocused] = useState<boolean>(false)
 
     const {
         id,
@@ -81,6 +80,8 @@ const BudgetItem = ({
     }
 
     const handleAmountFieldFocus = (e: FocusEvent<HTMLTextAreaElement>) => {
+        setIsFieldFocused(true)
+
         const amountValue = e.target.value
         const parsedFormattedCurrency = amountValue.replace(/[^0-9.-]+/g, '')
         setAmount(() =>
@@ -97,6 +98,8 @@ const BudgetItem = ({
     }
 
     const handleAmountFieldOnBlur = (e: FocusEvent<HTMLTextAreaElement>) => {
+        setIsFieldFocused(false)
+
         const amountValue = e.target.value
         if (amountValue === '' || parseInt(amountValue) === 0) {
             setAmount('')
@@ -104,6 +107,12 @@ const BudgetItem = ({
         }
         const formattedAmount = formatAmountWithCurrency(amountValue)
         setAmount(formattedAmount)
+    }
+
+    const handleDescriptionFieldOnBlur = () => {
+        setIsFieldFocused(false)
+
+        handleUpdate && handleUpdate(id, 'description', description || '')
     }
 
     const handleCheckboxToggle = (e: ChangeEvent) => {
@@ -126,26 +135,28 @@ const BudgetItem = ({
                         onChange={handleCheckboxToggle}
                     />
                 )}
-                <div className="flex w-full">
+                <div
+                    className={clsx(
+                        'flex w-full',
+                        styles.fieldWrapper,
+                        isFieldFocused && styles.focusedFieldWrapper,
+                        operation === ADD
+                            ? '!border-r-lightteal'
+                            : '!border-r-red'
+                    )}
+                >
                     <TextArea
                         ref={descriptionRef}
                         className={styles.descriptionField}
                         onChange={() => handleChange(descriptionRef)}
-                        onBlur={() =>
-                            handleUpdate &&
-                            handleUpdate(id, 'description', description || '')
-                        }
+                        onBlur={handleDescriptionFieldOnBlur}
+                        onFocus={() => setIsFieldFocused(true)}
                         onInput={updateDescriptionField}
                         value={description}
                     />
                     <TextArea
                         ref={amountRef}
-                        className={clsx(
-                            styles.amountField,
-                            operation === ADD
-                                ? '!border-r-lightteal'
-                                : '!border-r-red'
-                        )}
+                        className={styles.amountField}
                         onChange={() => handleChange(amountRef)}
                         onBlur={handleAmountFieldOnBlur}
                         onFocus={handleAmountFieldFocus}
