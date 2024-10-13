@@ -139,10 +139,10 @@ const BudgetItem = ({
                     className={clsx(
                         'flex w-full',
                         styles.fieldWrapper,
-                        isFieldFocused && styles.focusedFieldWrapper,
                         operation === ADD
                             ? '!border-r-lightteal'
-                            : '!border-r-red'
+                            : '!border-r-red',
+                        isFieldFocused && styles.focusedFieldWrapper
                     )}
                 >
                     <TextArea

@@ -51,6 +51,8 @@ const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
         defaultValues: defaultNewBudgetDetails,
     })
 
+    const { formState, } = formMethods
+
     const handleGoBackToPrevStep = () => {
         step !== 1 && setStep((step) => step - 1)
     }

@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import { Path, UseFormRegister, FieldValues } from 'react-hook-form'
-import { NewBudgetInputs } from '@/types/BudgetTypes'
 import styles from './TextField.module.css'
 
 interface TextFieldProps {
@@ -9,6 +8,10 @@ interface TextFieldProps {
     register: UseFormRegister<FieldValues>
     name: Path<FieldValues>
     className?: string
+    required?: boolean
+    requiredMessage?: string
+    pattern?: RegExp
+    patternMessage?: string
 }
 
 const TextField = ({
@@ -17,13 +20,27 @@ const TextField = ({
     name,
     register,
     className,
+    required = false,
+    requiredMessage,
+    pattern,
+    patternMessage,
 }: TextFieldProps) => {
     return (
         <input
             type={type}
             placeholder={placeholder}
             className={clsx(className, styles.textInput)}
-            {...register(name)}
+            {...register(name, {
+                required: {
+                    value: required,
+                    message: requiredMessage || '',
+                },
+                pattern: pattern && {
+                    value: pattern,
+                    message: patternMessage || '',
+                },
+            })}
+            autoComplete="off"
         />
     )
 }

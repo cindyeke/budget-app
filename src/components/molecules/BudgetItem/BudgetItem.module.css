@@ -12,17 +12,18 @@
     @apply border-y-0 border-l-0;
     @apply !content-center overflow-hidden h-[60px];
     @apply md:h-[50px];
-    @apply focus:outline-none focus:outline-offset-0;
+    @apply focus:outline-none focus:shadow-none focus:border-r-white;
 }
 
 .checkbox {
-    @apply absolute transform top-1/2 -translate-y-1/2 left-4 mt-[1px];
+    @apply absolute transform top-1/2 -translate-y-1/2 left-4 mt-[3px];
 }
 
 .fieldWrapper {
-    @apply border border-r-4 border-white rounded-lg;
+    @apply border border-r-4 border-white rounded-lg mt-[4px];
+    @apply transition-[border] ease-in-out duration-300;
 }
 
 .focusedFieldWrapper {
-    @apply !border-l-2 !border-t-2 !border-b-2;
+    @apply border-turquoise shadow-[0_0_5px_3px_rgba(102,252,241,0.5)] border-r-0;
 }
