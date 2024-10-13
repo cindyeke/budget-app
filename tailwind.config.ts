@@ -15,6 +15,7 @@ const config: Config = {
             teal: '#45A29E',
             lightteal: '#58bfba',
             red: '#d6746d',
+            'red-500': '#A21C1C',
             white: '#FFFFFF',
             'off-white': '#F0F0F0',
             black: '#000000',

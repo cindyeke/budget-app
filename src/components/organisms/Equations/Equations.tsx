@@ -21,12 +21,12 @@ const Equations = ({
         let calculatedIncome = income
 
         equationList.forEach((item) => {
-            const amount = parseInt(item.amount)
+            const amount = parseInt(item.amount) || 0
 
             if (item.operation === 'deduct') {
-                calculatedIncome -= amount // Deduct the amount from income
+                calculatedIncome -= amount
             } else if (item.operation === 'add') {
-                calculatedIncome += amount // Add the amount to income
+                calculatedIncome += amount
             }
         })
 

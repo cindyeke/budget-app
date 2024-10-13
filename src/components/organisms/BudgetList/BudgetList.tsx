@@ -75,7 +75,7 @@ const BudgetList = ({
     return (
         <div className="h-full flex flex-col mt-3 overflow-hidden">
             <div className="flex-1 overflow-scroll h-[70%] relative">
-                <div className="flex-1 flex flex-col gap-y-3 pl-8 pr-5">
+                <div className="flex-1 flex flex-col gap-y-2 pl-8 pr-5">
                     <BudgetItem
                         budgetItem={{
                             id: newBudgetId,
