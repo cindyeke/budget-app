@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid'
 import BudgetItem from '@/components/molecules/BudgetItem/BudgetItem'
 import {
     BudgetItemOperation,
-    NewBudgetDetails,
+    NewBudget,
     BudgetItemDetails,
     ADD,
 } from '@/types/BudgetTypes'
 import Equations from '../Equations/Equations'
 
 interface BudgetListProps {
-    newBudgetDetails: NewBudgetDetails
+    newBudgetDetails: NewBudget
     isAddNewButtonClicked: boolean
     operation: BudgetItemOperation
     setIsAddNewButtonClicked: Dispatch<SetStateAction<boolean>>
@@ -78,7 +78,7 @@ const BudgetList = ({
                 <div className="flex-1 flex flex-col gap-y-2 pl-8 pr-5">
                     <BudgetItem
                         budgetItem={{
-                            id: newBudgetId,
+                            id: newBudgetId || '',
                             description: 'Income',
                             amount: income,
                             operation: ADD,

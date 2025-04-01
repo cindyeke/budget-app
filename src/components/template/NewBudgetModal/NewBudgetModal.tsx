@@ -6,26 +6,19 @@ import {
     BudgetItemOperation,
     ADD,
     DEDUCT,
-    NewBudgetInputs,
+    NewBudget,
     SUBMIT,
-    NewBudgetDetails,
     BudgetItemDetails,
 } from '@/types/BudgetTypes'
 import Modal from '../Modal/Modal'
-import BudgetList from '@/components/organisms/BudgetList/BudgetList'
 import ModalContent from '../Modal/ModalContent'
 import ModalControlButtons from '../Modal/ModalControlButtons'
 import H1 from '@/components/atoms/H1/H1'
-import AddIcon from '@/svgs/add.svg'
-import MinusIcon from '@/svgs/minus.svg'
-import Button from '@/components/atoms/Button/Button'
-import { StepOne, StepThree, StepTwo } from './NewBudgetSteps'
-
-const addBudgetButtonStyles =
-    '!p-0 !gap-x-0 !border-0 !w-10 !h-10 !rounded-[50%]'
-const addBudgetIconStyles = 'w-8 h-8 text-off-white'
+import AddNewBudgetItemButtons from './AddNewBudgetItemButtons'
+import BudgetSteps from './BudgetSteps'
 
 interface NewBudgetModalProps {
+    openBudgetModal: boolean
     setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
 }
 
@@ -35,9 +28,13 @@ const defaultNewBudgetDetails = {
     income: '',
 }
 
-const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
+const NewBudgetModal = ({
+    openBudgetModal,
+    setOpenBudgetModal,
+}: NewBudgetModalProps) => {
+    console.log({ openBudgetModal })
     const [step, setStep] = useState(1)
-    const [newBudgetDetails, setNewBudgetDetails] = useState<NewBudgetDetails>(
+    const [newBudgetDetails, setNewBudgetDetails] = useState<NewBudget>(
         defaultNewBudgetDetails
     )
     const [budgetTitle, setBudgetTitle] = useState('')
@@ -47,20 +44,15 @@ const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
         useState<BudgetItemOperation>(ADD)
     const [budgetList, setBudgetList] = useState<BudgetItemDetails[]>([])
 
-    const formMethods = useForm<NewBudgetInputs>({
+    const formMethods = useForm<NewBudget>({
         defaultValues: defaultNewBudgetDetails,
     })
-
-    const { formState, } = formMethods
 
     const handleGoBackToPrevStep = () => {
         step !== 1 && setStep((step) => step - 1)
     }
 
-    const handleNewBudget: SubmitHandler<NewBudgetInputs> = ({
-        income,
-        title,
-    }) => {
+    const handleNewBudget: SubmitHandler<NewBudget> = ({ income, title }) => {
         if (step === 4) {
             setIsSavingNewBudget(true)
             const storedBudgetList = localStorage.getItem('budgets')
@@ -139,12 +131,18 @@ const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
     useEffect(() => {
         setBudgetTitle(() => title(newBudgetDetails.title))
     }, [newBudgetDetails.title])
-
     return (
         <Modal
             handleClose={handleCloseModal}
-            modalClassName="sm:!w-[550px] sm:!h-[70vh] sm:rounded-[20px]"
+            modalClassName={clsx(
+                'sm:!w-[550px] sm:!h-[70vh] sm:rounded-[20px] transform transition-opacity duration-1000',
+                {
+                    'opacity-100 ': openBudgetModal,
+                    'opacity-0': !openBudgetModal,
+                }
+            )}
             groupedContentClassName={`${step <= 3 ? 'p-5' : 'py-5'} overflow-scroll`}
+            // isOpen={openBudgetModal}
         >
             <FormProvider {...formMethods}>
                 <form
@@ -170,22 +168,15 @@ const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
                             )}
                         </div>
 
-                        {step === 1 && <StepOne />}
-                        {step === 2 && <StepTwo />}
-                        {step === 3 && <StepThree />}
-
-                        {step === 4 && (
-                            <BudgetList
-                                isAddNewButtonClicked={isAddNewButtonClicked}
-                                setIsAddNewButtonClicked={
-                                    setIsAddNewButtonClicked
-                                }
-                                newBudgetDetails={newBudgetDetails}
-                                operation={budgetItemOperation}
-                                setBudgetList={setBudgetList}
-                                budgetList={budgetList}
-                            />
-                        )}
+                        <BudgetSteps
+                            step={step}
+                            isAddNewButtonClicked={isAddNewButtonClicked}
+                            setIsAddNewButtonClicked={setIsAddNewButtonClicked}
+                            budgetItemOperation={budgetItemOperation}
+                            setBudgetList={setBudgetList}
+                            budgetList={budgetList}
+                            newBudgetDetails={newBudgetDetails}
+                        />
                     </ModalContent>
                     <ModalControlButtons
                         step={step}
@@ -199,31 +190,6 @@ const NewBudgetModal = ({ setOpenBudgetModal }: NewBudgetModalProps) => {
                 </form>
             </FormProvider>
         </Modal>
-    )
-}
-
-const AddNewBudgetItemButtons = ({
-    handleAddBtn,
-    handleDeductBtn,
-}: {
-    handleAddBtn: () => void
-    handleDeductBtn: () => void
-}) => {
-    return (
-        <div className="flex flex-1 justify-between max-w-[96px]">
-            <Button
-                type="button"
-                icon={<AddIcon className={addBudgetIconStyles} />}
-                className={clsx(addBudgetButtonStyles, '!bg-lightteal')}
-                onClick={handleAddBtn}
-            />
-            <Button
-                type="button"
-                icon={<MinusIcon className={addBudgetIconStyles} />}
-                className={clsx(addBudgetButtonStyles, 'bg-red')}
-                onClick={handleDeductBtn}
-            />
-        </div>
     )
 }
 
