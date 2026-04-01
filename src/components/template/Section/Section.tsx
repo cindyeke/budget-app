@@ -11,7 +11,13 @@ const Section = ({
     className?: string
 }) => {
     return (
-        <section className={clsx('h-dvh w-dvw', background, className)}>
+        <section
+            className={clsx(
+                'w-dvw h-dvh md:h-lvh p-5 flex flex-col justify-between',
+                background,
+                className
+            )}
+        >
             {children}
         </section>
     )
