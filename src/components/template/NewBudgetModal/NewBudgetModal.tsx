@@ -142,7 +142,7 @@ const NewBudgetModal = ({
                 }
             )}
             groupedContentClassName={`${step <= 3 ? 'p-5' : 'py-5'} overflow-scroll`}
-            // isOpen={openBudgetModal}
+            isOpen={openBudgetModal}
         >
             <FormProvider {...formMethods}>
                 <form

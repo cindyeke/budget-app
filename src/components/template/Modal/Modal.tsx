@@ -8,7 +8,7 @@ interface ModalProps {
     handleClose: () => void
     modalClassName?: string
     groupedContentClassName?: string
-    // isOpen: boolean
+    isOpen: boolean
 }
 
 const Modal = ({
@@ -16,28 +16,31 @@ const Modal = ({
     handleClose,
     modalClassName,
     groupedContentClassName,
-    // isOpen,
+    isOpen,
 }: ModalProps) => {
     return (
         <>
-            {/* {isOpen && ( */}
-            <>
-                <div className="bg-teal/40 absolute w-full h-full top-0 left-0"></div>
-                <div className={twMerge(styles.modal, modalClassName)}>
-                    <div className="h-[50px] text-grayblack self-end cursor-pointer">
-                        <CloseSvg className="w-6 h-6" onClick={handleClose} />
+            {isOpen && (
+                <>
+                    <div className="bg-teal/40 absolute w-full h-full top-0 left-0"></div>
+                    <div className={twMerge(styles.modal, modalClassName)}>
+                        <div className="h-[50px] text-grayblack self-end cursor-pointer">
+                            <CloseSvg
+                                className="w-6 h-6"
+                                onClick={handleClose}
+                            />
+                        </div>
+                        <div
+                            className={twMerge(
+                                'flex flex-col flex-1',
+                                groupedContentClassName
+                            )}
+                        >
+                            {children}
+                        </div>
                     </div>
-                    <div
-                        className={twMerge(
-                            'flex flex-col flex-1',
-                            groupedContentClassName
-                        )}
-                    >
-                        {children}
-                    </div>
-                </div>
-            </>
-            {/* )} */}
+                </>
+            )}
         </>
     )
 }
