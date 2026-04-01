@@ -1,7 +1,17 @@
-import { useEffect, useState } from 'react'
+import Section from '@/components/template/Section/Section'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
-const Budgets = () => {
+const Budgets = ({
+    isBudgetSaved,
+    openBudgetModal,
+    setIsBudgetSaved,
+}: {
+    isBudgetSaved: boolean
+    openBudgetModal: boolean
+    setIsBudgetSaved: Dispatch<SetStateAction<boolean>>
+}) => {
     const [budgets, setBudgets] = useState<{ id: string; title: string }[]>([])
+    const budgetList = useRef<HTMLDivElement>(null)
 
     const openBudgetList = () => {}
 
@@ -11,21 +21,41 @@ const Budgets = () => {
             const budg = JSON.parse(storedBudgets)
             setBudgets(budg)
         }
-        // // setBudgets(storedBudgets)
-        // console.log('budgets', JSON.parse(storedBudgets || '[]'))
     }, [])
 
+    useEffect(() => {
+        if (
+            budgets.length > 0 &&
+            isBudgetSaved &&
+            !openBudgetModal &&
+            budgetList.current
+        ) {
+            budgetList.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            })
+            setIsBudgetSaved(false)
+        }
+    }, [openBudgetModal])
+
     return (
-        <div>
-            <h1>Budgets</h1>
-            <div className="flex flex-col gap-y-5">
-                {budgets.map(({ id, title }) => (
-                    <button type="button" key={id} onClick={openBudgetList} className='text-left'>
-                        {title}
-                    </button>
-                ))}
+        <Section>
+            <div ref={budgetList}>
+                <h1>Budgets</h1>
+                <div className="flex flex-col gap-y-5">
+                    {budgets.map(({ id, title }) => (
+                        <button
+                            type="button"
+                            key={id}
+                            onClick={openBudgetList}
+                            className="text-left"
+                        >
+                            {title}
+                        </button>
+                    ))}
+                </div>
             </div>
-        </div>
+        </Section>
     )
 }
 

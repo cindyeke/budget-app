@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { v4 as uuidv4 } from 'uuid'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import {
     BudgetItemOperation,
@@ -20,6 +20,7 @@ import BudgetSteps from './BudgetSteps'
 interface NewBudgetModalProps {
     openBudgetModal: boolean
     setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
+    setIsBudgetSaved: Dispatch<SetStateAction<boolean>>
 }
 
 const defaultNewBudgetDetails = {
@@ -31,13 +32,12 @@ const defaultNewBudgetDetails = {
 const NewBudgetModal = ({
     openBudgetModal,
     setOpenBudgetModal,
+    setIsBudgetSaved
 }: NewBudgetModalProps) => {
-    console.log({ openBudgetModal })
     const [step, setStep] = useState(1)
     const [newBudgetDetails, setNewBudgetDetails] = useState<NewBudget>(
         defaultNewBudgetDetails
     )
-    const [budgetTitle, setBudgetTitle] = useState('')
     const [isSavingNewBudget, setIsSavingNewBudget] = useState(false)
     const [isAddNewButtonClicked, setIsAddNewButtonClicked] = useState(false)
     const [budgetItemOperation, setBudgetItemOperation] =
@@ -76,8 +76,6 @@ const NewBudgetModal = ({
                 }
 
                 localStorage.setItem('budgets', stringifiedBudgetList)
-
-                setIsSavingNewBudget(false)
                 handleCloseModal()
             }, 1000)
         }
@@ -101,7 +99,13 @@ const NewBudgetModal = ({
     const handleContinueStep = () => setStep((step) => step + 1)
 
     const refresh = () => {
+        setIsSavingNewBudget(false)
+        formMethods.reset()
         setStep(1)
+        setIsAddNewButtonClicked(false)
+        setBudgetItemOperation(ADD)
+        setBudgetList([])
+        setIsBudgetSaved(true)
     }
 
     const handleCloseModal = () => {
@@ -128,9 +132,6 @@ const NewBudgetModal = ({
         setBudgetItemOperation(DEDUCT)
     }
 
-    useEffect(() => {
-        setBudgetTitle(() => title(newBudgetDetails.title))
-    }, [newBudgetDetails.title])
     return (
         <Modal
             handleClose={handleCloseModal}
@@ -158,7 +159,7 @@ const NewBudgetModal = ({
                                     'w-[70%] capitalize': step > 3,
                                 })}
                             >
-                                {budgetTitle}
+                                {title(newBudgetDetails.title)}
                             </H1>
                             {step > 3 && (
                                 <AddNewBudgetItemButtons

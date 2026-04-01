@@ -11,7 +11,7 @@ const Section = ({
     className?: string
 }) => {
     return (
-        <section className={clsx('h-screen w-screen', background, className)}>
+        <section className={clsx('h-dvh w-dvw', background, className)}>
             {children}
         </section>
     )
