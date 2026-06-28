@@ -3,11 +3,14 @@ import Section from '@/components/template/Section/Section'
 import Button from '@/components/atoms/Button/Button'
 import AddIcon from '@/svgs/add.svg'
 import styles from './Banner.module.css'
+import { Budget } from '@/types/BudgetTypes'
 
 const Banner = ({
     setOpenBudgetModal,
+    setSelectedBudget,
 }: {
     setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
+    setSelectedBudget: Dispatch<SetStateAction<Budget | null>>
 }) => {
     return (
         <Section background={styles.background}>
@@ -15,7 +18,10 @@ const Banner = ({
                 type="button"
                 label="create a budget"
                 icon={<AddIcon className="w-5 h-5 text-teal" />}
-                onClick={() => setOpenBudgetModal(true)}
+                onClick={() => {
+                    setOpenBudgetModal(true)
+                    setSelectedBudget(null)
+                }}
                 className="self-end text-teal border-teal"
             />
             <div className="flex flex-col text-off-white w-[250px] mb-20">

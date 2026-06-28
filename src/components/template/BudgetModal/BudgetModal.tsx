@@ -1,12 +1,12 @@
 import clsx from 'clsx'
 import { v4 as uuidv4 } from 'uuid'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import {
     BudgetItemOperation,
     ADD,
     DEDUCT,
-    NewBudget,
+    Budget,
     SUBMIT,
     BudgetItemDetails,
 } from '@/types/BudgetTypes'
@@ -21,6 +21,7 @@ interface NewBudgetModalProps {
     openBudgetModal: boolean
     setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
     setIsBudgetSaved: Dispatch<SetStateAction<boolean>>
+    selectedBudget: Budget | null
 }
 
 const defaultNewBudgetDetails = {
@@ -29,13 +30,14 @@ const defaultNewBudgetDetails = {
     income: '',
 }
 
-const NewBudgetModal = ({
+const BudgetModal = ({
     openBudgetModal,
     setOpenBudgetModal,
-    setIsBudgetSaved
+    setIsBudgetSaved,
+    selectedBudget,
 }: NewBudgetModalProps) => {
     const [step, setStep] = useState(1)
-    const [newBudgetDetails, setNewBudgetDetails] = useState<NewBudget>(
+    const [budgetDetails, setBudgetDetails] = useState<Budget>(
         defaultNewBudgetDetails
     )
     const [isSavingNewBudget, setIsSavingNewBudget] = useState(false)
@@ -44,7 +46,7 @@ const NewBudgetModal = ({
         useState<BudgetItemOperation>(ADD)
     const [budgetList, setBudgetList] = useState<BudgetItemDetails[]>([])
 
-    const formMethods = useForm<NewBudget>({
+    const formMethods = useForm<Budget>({
         defaultValues: defaultNewBudgetDetails,
     })
 
@@ -52,37 +54,58 @@ const NewBudgetModal = ({
         step !== 1 && setStep((step) => step - 1)
     }
 
-    const handleNewBudget: SubmitHandler<NewBudget> = ({ income, title }) => {
+    const handleNextButton: SubmitHandler<Budget> = ({ income, title }) => {
         if (step === 4) {
             setIsSavingNewBudget(true)
             const storedBudgetList = localStorage.getItem('budgets')
 
             let stringifiedBudgetList
-            const uniqueBudget = {
-                id: uuidv4(),
-                income,
-                title,
-                list: budgetList,
-            }
-            setTimeout(() => {
-                if (storedBudgetList) {
-                    const parsedBudgetList = JSON.parse(storedBudgetList)
-                    stringifiedBudgetList = JSON.stringify([
-                        ...parsedBudgetList,
-                        uniqueBudget,
-                    ])
-                } else {
-                    stringifiedBudgetList = JSON.stringify([uniqueBudget])
-                }
 
-                localStorage.setItem('budgets', stringifiedBudgetList)
-                handleCloseModal()
-            }, 1000)
+            if (selectedBudget && storedBudgetList) {
+                const parsedBudgetList: Budget[] = JSON.parse(storedBudgetList)
+                const transformedBudgetList = parsedBudgetList.map(
+                    (budgetItem) =>
+                        budgetItem.id === selectedBudget.id
+                            ? { ...budgetItem, list: budgetList }
+                            : budgetItem
+                )
+                setTimeout(() => {
+                    stringifiedBudgetList = JSON.stringify(
+                        transformedBudgetList
+                    )
+
+                    localStorage.setItem('budgets', stringifiedBudgetList)
+                    handleCloseModal()
+                    setIsBudgetSaved(true)
+                }, 1000)
+            } else {
+                const uniqueBudget: Budget = {
+                    id: uuidv4(),
+                    income,
+                    title,
+                    list: budgetList,
+                }
+                setTimeout(() => {
+                    if (storedBudgetList) {
+                        const parsedBudgetList = JSON.parse(storedBudgetList)
+                        stringifiedBudgetList = JSON.stringify([
+                            ...parsedBudgetList,
+                            uniqueBudget,
+                        ])
+                    } else {
+                        stringifiedBudgetList = JSON.stringify([uniqueBudget])
+                    }
+
+                    localStorage.setItem('budgets', stringifiedBudgetList)
+                    handleCloseModal()
+                    setIsBudgetSaved(true)
+                }, 1000)
+            }
         }
         if (step === 3) {
             setIsSavingNewBudget(true)
             setTimeout(() => {
-                setNewBudgetDetails({
+                setBudgetDetails({
                     id: uuidv4(),
                     title,
                     income,
@@ -105,7 +128,6 @@ const NewBudgetModal = ({
         setIsAddNewButtonClicked(false)
         setBudgetItemOperation(ADD)
         setBudgetList([])
-        setIsBudgetSaved(true)
     }
 
     const handleCloseModal = () => {
@@ -132,6 +154,22 @@ const NewBudgetModal = ({
         setBudgetItemOperation(DEDUCT)
     }
 
+    useEffect(() => {
+        if (selectedBudget) {
+            setStep(4)
+            if (selectedBudget.list) {
+                setBudgetDetails({
+                    id: selectedBudget.id,
+                    title: selectedBudget.title,
+                    income: selectedBudget.income,
+                })
+                setBudgetList(selectedBudget.list)
+            }
+        } else {
+            setStep(1)
+        }
+    }, [selectedBudget])
+
     return (
         <Modal
             handleClose={handleCloseModal}
@@ -147,7 +185,7 @@ const NewBudgetModal = ({
         >
             <FormProvider {...formMethods}>
                 <form
-                    onSubmit={formMethods.handleSubmit(handleNewBudget)}
+                    onSubmit={formMethods.handleSubmit(handleNextButton)}
                     className="flex flex-col flex-1 overflow-scroll"
                 >
                     <ModalContent className="flex flex-col">
@@ -159,7 +197,7 @@ const NewBudgetModal = ({
                                     'w-[70%] capitalize': step > 3,
                                 })}
                             >
-                                {title(newBudgetDetails.title)}
+                                {title(budgetDetails.title)}
                             </H1>
                             {step > 3 && (
                                 <AddNewBudgetItemButtons
@@ -176,7 +214,7 @@ const NewBudgetModal = ({
                             budgetItemOperation={budgetItemOperation}
                             setBudgetList={setBudgetList}
                             budgetList={budgetList}
-                            newBudgetDetails={newBudgetDetails}
+                            newBudgetDetails={budgetDetails}
                         />
                     </ModalContent>
                     <ModalControlButtons
@@ -194,4 +232,4 @@ const NewBudgetModal = ({
     )
 }
 
-export default NewBudgetModal
+export default BudgetModal

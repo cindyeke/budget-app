@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid'
 import BudgetItem from '@/components/molecules/BudgetItem/BudgetItem'
 import {
     BudgetItemOperation,
-    NewBudget,
+    Budget,
     BudgetItemDetails,
     ADD,
 } from '@/types/BudgetTypes'
 import Equations from '../Equations/Equations'
 
 interface BudgetListProps {
-    newBudgetDetails: NewBudget
+    newBudgetDetails: Budget
     isAddNewButtonClicked: boolean
     operation: BudgetItemOperation
     setIsAddNewButtonClicked: Dispatch<SetStateAction<boolean>>
@@ -71,6 +71,11 @@ const BudgetList = ({
         }
         setIsAddNewButtonClicked(false)
     }, [isAddNewButtonClicked, operation])
+
+    useEffect(() => {
+        setEquationList(budgetList)
+        setIsAmountFieldUpdated(true)
+    }, [])
 
     return (
         <div className="h-full flex flex-col mt-3 overflow-hidden">

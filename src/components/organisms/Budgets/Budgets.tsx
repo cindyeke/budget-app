@@ -1,4 +1,5 @@
 import Section from '@/components/template/Section/Section'
+import { Budget } from '@/types/BudgetTypes'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
 const Budgets = ({
@@ -6,37 +7,40 @@ const Budgets = ({
     openBudgetModal,
     setOpenBudgetModal,
     setIsBudgetSaved,
+    setSelectedBudget,
 }: {
     isBudgetSaved: boolean
     openBudgetModal: boolean
     setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
     setIsBudgetSaved: Dispatch<SetStateAction<boolean>>
+    setSelectedBudget: Dispatch<SetStateAction<Budget | null>>
 }) => {
-    const [budgets, setBudgets] = useState<{ id: string; title: string }[]>([])
+    const [budgets, setBudgets] = useState<Budget[]>([])
     const budgetList = useRef<HTMLDivElement>(null)
 
-    const openBudget = () => setOpenBudgetModal(true)
+    const openBudget = (budget: Budget) => {
+        setOpenBudgetModal(true)
+        setSelectedBudget(budget)
+    }
 
     useEffect(() => {
         const storedBudgets = localStorage.getItem('budgets')
         if (storedBudgets) {
-            const budg = JSON.parse(storedBudgets)
-            setBudgets(budg)
-        }
-    }, [])
+            const budgets = JSON.parse(storedBudgets)
+            setBudgets(budgets)
 
-    useEffect(() => {
-        if (
-            budgets.length > 0 &&
-            isBudgetSaved &&
-            !openBudgetModal &&
-            budgetList.current
-        ) {
-            budgetList.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            })
-            setIsBudgetSaved(false)
+            if (
+                budgets.length > 0 &&
+                isBudgetSaved &&
+                !openBudgetModal &&
+                budgetList.current
+            ) {
+                budgetList.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                })
+                setIsBudgetSaved(false)
+            }
         }
     }, [openBudgetModal])
 
@@ -47,15 +51,15 @@ const Budgets = ({
                     all your budgets
                 </h2>
                 <div className="flex flex-col overflow-y-scroll h-[80%] content-start gap-y-2">
-                    {budgets.map(({ id, title }) => (
+                    {budgets.map((budget) => (
                         <button
                             type="button"
-                            key={id}
-                            onClick={openBudget}
+                            key={budget.id}
+                            onClick={() => openBudget(budget)}
                             className="flex justify-between text-lightteal p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10"
                         >
                             <span className="text-left capitalize">
-                                {title}
+                                {budget.title}
                             </span>
                             <span className="text-xs self-end">
                                 created 01/04/2026

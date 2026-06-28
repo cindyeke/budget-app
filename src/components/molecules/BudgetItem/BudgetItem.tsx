@@ -117,7 +117,6 @@ const BudgetItem = ({
 
     const handleCheckboxToggle = (e: ChangeEvent) => {
         const { checked } = e.target as HTMLInputElement
-        console.log({ checked })
     }
 
     return (

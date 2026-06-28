@@ -6,14 +6,16 @@ export const BUTTON = 'button'
 
 export type ButtonType = typeof SUBMIT | typeof RESET | typeof BUTTON
 export type BudgetItemOperation = typeof ADD | typeof DEDUCT
-export type NewBudget = {
-    id?: string
-    income: string
-    title: string
-}
+
 export type BudgetItemDetails = {
     id: string
     amount: string
     description: string
     operation: string
+}
+export type Budget = {
+    id?: string
+    income: string
+    title: string
+    list?: BudgetItemDetails[]
 }

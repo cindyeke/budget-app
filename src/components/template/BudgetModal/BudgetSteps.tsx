@@ -4,7 +4,7 @@ import { StepOne, StepThree, StepTwo } from './NewBudgetSteps'
 import {
     BudgetItemDetails,
     BudgetItemOperation,
-    NewBudget,
+    Budget,
 } from '@/types/BudgetTypes'
 
 interface BudgetStepsProps {
@@ -13,7 +13,7 @@ interface BudgetStepsProps {
     setIsAddNewButtonClicked: Dispatch<SetStateAction<boolean>>
     budgetItemOperation: BudgetItemOperation
     budgetList: BudgetItemDetails[]
-    newBudgetDetails: NewBudget
+    newBudgetDetails: Budget
     setBudgetList: Dispatch<SetStateAction<BudgetItemDetails[]>>
 }
 
