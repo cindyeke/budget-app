@@ -4,16 +4,18 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 const Budgets = ({
     isBudgetSaved,
     openBudgetModal,
+    setOpenBudgetModal,
     setIsBudgetSaved,
 }: {
     isBudgetSaved: boolean
     openBudgetModal: boolean
+    setOpenBudgetModal: Dispatch<SetStateAction<boolean>>
     setIsBudgetSaved: Dispatch<SetStateAction<boolean>>
 }) => {
     const [budgets, setBudgets] = useState<{ id: string; title: string }[]>([])
     const budgetList = useRef<HTMLDivElement>(null)
 
-    const openBudgetList = () => {}
+    const openBudget = () => setOpenBudgetModal(true)
 
     useEffect(() => {
         const storedBudgets = localStorage.getItem('budgets')
@@ -49,10 +51,12 @@ const Budgets = ({
                         <button
                             type="button"
                             key={id}
-                            onClick={openBudgetList}
-                            className="flex justify-between text-lightteal capitalize p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10"
+                            onClick={openBudget}
+                            className="flex justify-between text-lightteal p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10"
                         >
-                            <span className="text-left">{title}</span>
+                            <span className="text-left capitalize">
+                                {title}
+                            </span>
                             <span className="text-xs self-end">
                                 created 01/04/2026
                             </span>

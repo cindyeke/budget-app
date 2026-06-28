@@ -19,6 +19,7 @@ export default function App() {
             <Budgets
                 isBudgetSaved={isBudgetSaved}
                 openBudgetModal={openBudgetModal}
+                setOpenBudgetModal={setOpenBudgetModal}
                 setIsBudgetSaved={setIsBudgetSaved}
             />
             <NewBudgetModal
