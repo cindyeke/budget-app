@@ -20,7 +20,7 @@ interface TextAreaProps {
 }
 
 const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-    (
+    function TextArea(
         {
             placeholder,
             className,
@@ -32,7 +32,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             disabled = false,
         }: TextAreaProps,
         ref: ForwardedRef<HTMLTextAreaElement>
-    ) => {
+    ) {
         return (
             <textarea
                 ref={ref}
