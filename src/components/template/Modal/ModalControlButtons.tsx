@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import Button from '@/components/atoms/Button/Button'
 import styles from './Modal.module.css'
-import { BUTTON, ButtonType } from '@/types/BudgetTypes'
+import { BUTTON, ButtonType } from '@/utils/types'
 
 interface ModalControlButtonsProps {
     prevBtnType?: ButtonType

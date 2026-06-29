@@ -1,9 +1,9 @@
 'use client'
 import { useState } from 'react'
-import Budgets from '@/components/organisms/Budgets/Budgets'
-import Banner from '@/components/sections/Banner/Banner'
+import AllBudgets from '@/components/sections/AllBudgets/AllBudgets'
+import Hero from '@/components/sections/Hero/Hero'
 import BudgetModal from '@/components/template/BudgetModal/BudgetModal'
-import { Budget } from '@/types/BudgetTypes'
+import { Budget } from '@/utils/types'
 
 export default function App() {
     const [openBudgetModal, setOpenBudgetModal] = useState(false)
@@ -12,11 +12,11 @@ export default function App() {
 
     return (
         <div className="bg-off-white">
-            <Banner
+            <Hero
                 setOpenBudgetModal={setOpenBudgetModal}
                 setSelectedBudget={setSelectedBudget}
             />
-            <Budgets
+            <AllBudgets
                 isBudgetSaved={isBudgetSaved}
                 openBudgetModal={openBudgetModal}
                 setOpenBudgetModal={setOpenBudgetModal}

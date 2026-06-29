@@ -10,7 +10,7 @@ import {
 import clsx from 'clsx'
 import Checkbox from '@/components/atoms/Checkbox/Checkbox'
 import TextArea from '@/components/atoms/TextArea/TextArea'
-import { ADD, BudgetItemDetails } from '@/types/BudgetTypes'
+import { ADD, BudgetItemDetails } from '@/utils/types'
 import DeleteIcon from '@/svgs/delete.svg'
 import styles from './BudgetItem.module.css'
 
@@ -116,6 +116,7 @@ const BudgetItem = ({
     }
 
     const handleCheckboxToggle = (e: ChangeEvent) => {
+        // TO DO : mark as paid ???
         const { checked } = e.target as HTMLInputElement
     }
 

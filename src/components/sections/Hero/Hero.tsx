@@ -2,10 +2,10 @@ import { Dispatch, SetStateAction } from 'react'
 import Section from '@/components/template/Section/Section'
 import Button from '@/components/atoms/Button/Button'
 import AddIcon from '@/svgs/add.svg'
-import styles from './Banner.module.css'
-import { Budget } from '@/types/BudgetTypes'
+import styles from './Hero.module.css'
+import { Budget } from '@/utils/types'
 
-const Banner = ({
+const Hero = ({
     setOpenBudgetModal,
     setSelectedBudget,
 }: {
@@ -37,4 +37,4 @@ const Banner = ({
     )
 }
 
-export default Banner
+export default Hero

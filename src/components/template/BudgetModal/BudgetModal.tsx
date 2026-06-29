@@ -9,10 +9,10 @@ import {
     Budget,
     SUBMIT,
     BudgetItemDetails,
-} from '@/types/BudgetTypes'
-import Modal from '../Modal/Modal'
+} from '@/utils/types'
+import Modal from '@/components/template/Modal/Modal'
 import ModalContent from '../Modal/ModalContent'
-import ModalControlButtons from '../Modal/ModalControlButtons'
+import ModalControlButtons from '@/components/template/Modal/ModalControlButtons'
 import H1 from '@/components/atoms/H1/H1'
 import AddNewBudgetItemButtons from './AddNewBudgetItemButtons'
 import BudgetSteps from './BudgetSteps'
@@ -55,6 +55,8 @@ const BudgetModal = ({
     }
 
     const handleNextButton: SubmitHandler<Budget> = ({ income, title }) => {
+        const date = new Date()
+        const todaysDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
         if (step === 4) {
             setIsSavingNewBudget(true)
             const storedBudgetList = localStorage.getItem('budgets')
@@ -66,7 +68,11 @@ const BudgetModal = ({
                 const transformedBudgetList = parsedBudgetList.map(
                     (budgetItem) =>
                         budgetItem.id === selectedBudget.id
-                            ? { ...budgetItem, list: budgetList }
+                            ? {
+                                  ...budgetItem,
+                                  list: budgetList,
+                                  updatedAt: todaysDate,
+                              }
                             : budgetItem
                 )
                 setTimeout(() => {
@@ -84,6 +90,7 @@ const BudgetModal = ({
                     income,
                     title,
                     list: budgetList,
+                    createdAt: todaysDate,
                 }
                 setTimeout(() => {
                     if (storedBudgetList) {

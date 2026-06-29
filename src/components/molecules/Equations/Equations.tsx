@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { BudgetItemDetails } from '@/types/BudgetTypes'
+import { BudgetItemDetails } from '@/utils/types'
 import { formatAmountWithCurrency } from '@/utils/format'
 
 interface EquationProps {
@@ -43,7 +43,7 @@ const Equations = ({
 
     return (
         <div className="mt-5 ml-8 mr-5 grid grid-cols-2 text-sm xs:text-base bg-off-white rounded-lg p-5">
-            <span>Balance</span>
+            <span>Total</span>
             <span className="justify-self-end tracking-[2px]">
                 {formatAmountWithCurrency(amountLeft.toString())}
             </span>

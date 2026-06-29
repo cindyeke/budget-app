@@ -6,7 +6,7 @@ import {
     Budget,
     BudgetItemDetails,
     ADD,
-} from '@/types/BudgetTypes'
+} from '@/utils/types'
 import Equations from '../Equations/Equations'
 
 interface BudgetListProps {
