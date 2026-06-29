@@ -1,5 +1,5 @@
 .modal {
-    @apply p-5 absolute w-full h-full flex flex-col bg-teal;
+    @apply p-5 fixed w-full h-full flex flex-col bg-teal;
     @apply right-1/2 top-1/2 translate-x-1/2 -translate-y-1/2;
 }
 

@@ -117,14 +117,13 @@ const BudgetItem = ({
 
     const handleCheckboxToggle = (e: ChangeEvent) => {
         const { checked } = e.target as HTMLInputElement
-        console.log({ checked })
     }
 
     return (
         <div className="flex items-center">
             {!isDefault && (
                 <DeleteIcon
-                    className="absolute left-0 w-[20px] h-[20px] cursor-pointer"
+                    className="absolute left-0 w-[20px] h-[20px] cursor-pointer mt-[4px]"
                     onClick={() => handleDelete && handleDelete(id)}
                 />
             )}
