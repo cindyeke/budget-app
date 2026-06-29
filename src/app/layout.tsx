@@ -8,7 +8,7 @@ const quicksand = Quicksand({
 })
 
 export const metadata: Metadata = {
-    title: 'Ịwai',
+    title: 'Ịwai | Easy Budgeting',
     description: 'Create your budget in three easy steps.',
 }
 
