@@ -1,11 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
-import BudgetList from '@/components/organisms/BudgetList/BudgetList'
+import BudgetList from '@/components/molecules/BudgetList/BudgetList'
 import { StepOne, StepThree, StepTwo } from './NewBudgetSteps'
-import {
-    BudgetItemDetails,
-    BudgetItemOperation,
-    Budget,
-} from '@/types/BudgetTypes'
+import { BudgetItemDetails, BudgetItemOperation, Budget } from '@/utils/types'
 
 interface BudgetStepsProps {
     step: number

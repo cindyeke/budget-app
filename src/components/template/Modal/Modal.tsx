@@ -40,9 +40,9 @@ const Modal = ({
     return (
         <dialog
             ref={dialogRef}
-            onClose={handleClose} // fires on Esc-close too, keeps state in sync
+            onClose={handleClose}
             onClick={(e) => {
-                if (e.target === dialogRef.current) handleClose() // click on backdrop
+                if (e.target === dialogRef.current) handleClose()
             }}
         >
             <div className={twMerge(styles.modal, modalClassName)}>

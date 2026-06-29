@@ -18,4 +18,6 @@ export type Budget = {
     income: string
     title: string
     list?: BudgetItemDetails[]
+    createdAt?: string
+    updatedAt?: string
 }

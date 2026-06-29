@@ -1,5 +1,5 @@
 import Section from '@/components/template/Section/Section'
-import { Budget } from '@/types/BudgetTypes'
+import { Budget } from '@/utils/types'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 
 const Budgets = ({
@@ -48,7 +48,7 @@ const Budgets = ({
         <Section>
             <div ref={budgetList} className="h-[95%] overflow-y-scroll">
                 <h2 className="text-[40px] leading-[45px] mb-8">
-                    all your budgets
+                    all budgets
                 </h2>
                 <div className="flex flex-col overflow-y-scroll h-[80%] content-start gap-y-2">
                     {budgets.map((budget) => (
@@ -61,9 +61,15 @@ const Budgets = ({
                             <span className="text-left capitalize">
                                 {budget.title}
                             </span>
-                            <span className="text-xs self-end">
-                                created 01/04/2026
-                            </span>
+                            <div className="flex gap-x-10">
+                                <span className="text-xs self-end">
+                                    created at {budget.createdAt}
+                                </span>
+                                <span className="text-xs self-end">
+                                    updated at{' '}
+                                    {budget.updatedAt ?? budget.createdAt}
+                                </span>
+                            </div>
                         </button>
                     ))}
                 </div>
