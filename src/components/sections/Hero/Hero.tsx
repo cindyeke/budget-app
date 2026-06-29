@@ -26,7 +26,7 @@ const Hero = ({
             />
             <div className="flex flex-col text-off-white w-[250px] mb-20">
                 <span className="text-[40px] leading-[45px]">
-                    budgeting made easy
+                    budgeting made easy with Ịwai
                 </span>
                 <span className="text-xs font-light mt-2 ml-1">
                     Create your budget in <b>three</b> steps: <br />
