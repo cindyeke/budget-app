@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { ReactNode } from 'react'
 import Loader from '@/components/atoms/Loader/Loader'
-import { ButtonType } from '@/types/BudgetTypes'
+import { ButtonType } from '@/utils/types'
 
 interface ButtonProps {
     label?: string
