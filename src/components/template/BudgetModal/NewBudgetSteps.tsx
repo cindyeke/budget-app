@@ -99,8 +99,8 @@ export const StepThree = () => {
                 </div>
                 <div className="text-sm">
                     <span className="mr-1">
-                        Feel free to skip this part if describing things isn't
-                        your cup of tea
+                        Feel free to skip this part if describing things
+                        isn&apos;t your cup of tea
                     </span>
                     {String.fromCodePoint(parseInt('0x1f605', 16))}
                     {/* This piece of information will be shown for for logged in users */}
