@@ -65,6 +65,8 @@ const BudgetModal = ({
         currency,
     }) => {
         if (step === 4) {
+            const resolvedTitle = title.trim() || budgetDetails.title
+
             setIsSavingNewBudget(true)
             const storedBudgetList = localStorage.getItem('budgets')
 
@@ -79,7 +81,7 @@ const BudgetModal = ({
                                   ...budgetItem,
                                   list: budgetList,
                                   updatedAt: todaysDate,
-                                  title,
+                                  title: resolvedTitle,
                               }
                             : budgetItem
                 )
@@ -96,7 +98,7 @@ const BudgetModal = ({
                 const uniqueBudget: Budget = {
                     id: uuidv4(),
                     income,
-                    title,
+                    title: resolvedTitle,
                     currency,
                     list: budgetList,
                     createdAt: todaysDate,
