@@ -26,7 +26,7 @@ const BudgetList = ({
     budgetList,
     setBudgetList,
 }: BudgetListProps) => {
-    const { id: newBudgetId, income } = newBudgetDetails
+    const { id: newBudgetId, income, currency } = newBudgetDetails
     const [equationList, setEquationList] = useState<BudgetItemDetails[]>([])
     const [isAmountFieldUpdated, setIsAmountFieldUpdated] = useState(false)
 
@@ -82,6 +82,7 @@ const BudgetList = ({
             <div className="flex-1 overflow-scroll h-[70%] relative">
                 <div className="flex-1 flex flex-col gap-y-2 pl-8 pr-5">
                     <BudgetItem
+                        currency={currency}
                         budgetItem={{
                             id: newBudgetId || '',
                             description: 'Income',
@@ -92,6 +93,7 @@ const BudgetList = ({
                     />
                     {budgetList.map((item) => (
                         <BudgetItem
+                            currency={currency}
                             key={item.id}
                             budgetItem={item}
                             handleDelete={deleteBudgetItem}
@@ -101,6 +103,7 @@ const BudgetList = ({
                 </div>
             </div>
             <Equations
+                currency={currency}
                 income={Number(income)}
                 equationList={equationList}
                 isAmountFieldUpdated={isAmountFieldUpdated}

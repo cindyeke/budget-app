@@ -29,6 +29,7 @@ const defaultNewBudgetDetails = {
     id: '',
     title: '',
     income: '',
+    currency: 'NGN',
 }
 
 const BudgetModal = ({
@@ -58,7 +59,11 @@ const BudgetModal = ({
         step !== 1 && setStep((step) => step - 1)
     }
 
-    const handleNextButton: SubmitHandler<Budget> = ({ income, title }) => {
+    const handleNextButton: SubmitHandler<Budget> = ({
+        income,
+        title,
+        currency,
+    }) => {
         if (step === 4) {
             setIsSavingNewBudget(true)
             const storedBudgetList = localStorage.getItem('budgets')
@@ -92,6 +97,7 @@ const BudgetModal = ({
                     id: uuidv4(),
                     income,
                     title,
+                    currency,
                     list: budgetList,
                     createdAt: todaysDate,
                 }
@@ -119,6 +125,7 @@ const BudgetModal = ({
                     id: uuidv4(),
                     title,
                     income,
+                    currency,
                 })
                 setIsSavingNewBudget(false)
                 handleContinueStep()
@@ -165,34 +172,34 @@ const BudgetModal = ({
         setBudgetItemOperation(DEDUCT)
     }
 
-    const handleDuplicateBudgetItem = () => {
-        let stringifiedBudgetList
-        const storedBudgetList = localStorage.getItem('budgets')
+    // const handleDuplicateBudgetItem = () => {
+    //     let stringifiedBudgetList
+    //     const storedBudgetList = localStorage.getItem('budgets')
 
-        const uniqueBudget: Budget = {
-            id: uuidv4(),
-            income: budgetDetails.income,
-            title: `${budgetDetails.title}_copy`,
-            list: budgetList,
-            createdAt: todaysDate,
-        }
+    //     const uniqueBudget: Budget = {
+    //         id: uuidv4(),
+    //         income: budgetDetails.income,
+    //         title: `${budgetDetails.title}_copy`,
+    //         list: budgetList,
+    //         createdAt: todaysDate,
+    //     }
 
-        if (storedBudgetList) {
-            const parsedBudgetList = JSON.parse(storedBudgetList)
+    //     if (storedBudgetList) {
+    //         const parsedBudgetList = JSON.parse(storedBudgetList)
 
-            console.log({ parsedBudgetList })
-            stringifiedBudgetList = JSON.stringify([
-                ...parsedBudgetList,
-                uniqueBudget,
-            ])
-        } else {
-            stringifiedBudgetList = JSON.stringify([uniqueBudget])
-        }
+    //         console.log({ parsedBudgetList })
+    //         stringifiedBudgetList = JSON.stringify([
+    //             ...parsedBudgetList,
+    //             uniqueBudget,
+    //         ])
+    //     } else {
+    //         stringifiedBudgetList = JSON.stringify([uniqueBudget])
+    //     }
 
-        localStorage.setItem('budgets', stringifiedBudgetList)
+    //     localStorage.setItem('budgets', stringifiedBudgetList)
 
-        // show duplicate successful notification!
-    }
+    //     // show duplicate successful notification!
+    // }
 
     const [isEditingTitle, setIsEditingTitle] = useState(false)
 
@@ -209,6 +216,7 @@ const BudgetModal = ({
                     id: selectedBudget.id,
                     title: selectedBudget.title,
                     income: selectedBudget.income,
+                    currency: selectedBudget.currency,
                 })
                 setBudgetList(selectedBudget.list)
             }

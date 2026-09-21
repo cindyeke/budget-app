@@ -10,6 +10,7 @@ import TextArea from '@/components/atoms/TextArea/TextArea'
 import TextField from '@/components/atoms/TextField/TextField'
 import InfoCircle from '@/svgs/info-circle.svg'
 import WarningIcon from '@/svgs/warning.svg'
+import CurrencyRadioGroup from '@/components/molecules/CurrencyRadioGroup'
 
 const textFieldStyle = 'mt-4'
 const errorMessageStyle =
@@ -32,7 +33,12 @@ export const StepOne = () => {
     } = useFormContext<FieldValues>()
 
     return (
-        <>
+        <div className="flex flex-col gap-y-6">
+            <CurrencyRadioGroup
+                register={register}
+                className="mt-4"
+                name="currency"
+            />
             <TextField
                 type="text"
                 placeholder="Expected income"
@@ -53,7 +59,7 @@ export const StepOne = () => {
                     {getErrorMessage(errors.income)}
                 </span>
             )}
-        </>
+        </div>
     )
 }
 
