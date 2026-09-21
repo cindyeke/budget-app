@@ -131,7 +131,7 @@ const BudgetItem = ({
         <div className="flex items-center">
             {!isDefault && (
                 <DeleteIcon
-                    className="absolute left-0 w-[20px] h-[20px] cursor-pointer mt-[4px]"
+                    className="absolute -left-8 w-[20px] h-[20px] cursor-pointer mt-[4px]"
                     onClick={() => handleDelete && handleDelete(id)}
                 />
             )}

@@ -8,6 +8,7 @@ import {
     useSensor,
     useSensors,
     DragEndEvent,
+    Modifier,
 } from '@dnd-kit/core'
 import {
     SortableContext,
@@ -24,6 +25,11 @@ import {
     ADD,
 } from '@/utils/types'
 import Equations from '../Equations/Equations'
+
+const restrictToVerticalAxis: Modifier = ({ transform }) => ({
+    ...transform,
+    x: 0,
+})
 
 interface BudgetListProps {
     newBudgetDetails: Budget
@@ -68,16 +74,16 @@ const SortableBudgetItem = ({
 
     return (
         <div ref={setNodeRef} style={style} className="relative">
-            <div
-                className="absolute -left-5 top-1/2 -translate-y-1/2 w-4 h-8 cursor-grab touch-none active:cursor-grabbing"
-                {...attributes}
-                {...listeners}
-            />
             <BudgetItem
                 currency={currency}
                 budgetItem={budgetItem}
                 handleDelete={handleDelete}
                 handleUpdate={handleUpdate}
+            />
+            <div
+                className="absolute -right-5 top-1/2 -translate-y-1/2 w-4 h-8 cursor-grab touch-none active:cursor-grabbing"
+                {...attributes}
+                {...listeners}
             />
         </div>
     )
@@ -169,7 +175,7 @@ const BudgetList = ({
 
     return (
         <div className="h-full flex flex-col mt-3 overflow-hidden">
-            <div className="flex-1 overflow-scroll h-[70%] relative">
+            <div className="flex-1 h-[70%] relative overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <div className="flex-1 flex flex-col gap-y-2 pl-8 pr-5">
                     <BudgetItem
                         currency={currency}
@@ -184,6 +190,7 @@ const BudgetList = ({
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
+                        modifiers={[restrictToVerticalAxis]}
                         onDragEnd={handleDragEnd}
                     >
                         <SortableContext
