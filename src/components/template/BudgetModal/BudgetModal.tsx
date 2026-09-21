@@ -50,13 +50,14 @@ const BudgetModal = ({
         defaultValues: defaultNewBudgetDetails,
     })
 
+    const date = new Date()
+    const todaysDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
     const handleGoBackToPrevStep = () => {
         step !== 1 && setStep((step) => step - 1)
     }
 
     const handleNextButton: SubmitHandler<Budget> = ({ income, title }) => {
-        const date = new Date()
-        const todaysDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
         if (step === 4) {
             setIsSavingNewBudget(true)
             const storedBudgetList = localStorage.getItem('budgets')
@@ -161,6 +162,35 @@ const BudgetModal = ({
         setBudgetItemOperation(DEDUCT)
     }
 
+    const handleDuplicateBudgetItem = () => {
+        let stringifiedBudgetList
+        const storedBudgetList = localStorage.getItem('budgets')
+
+        const uniqueBudget: Budget = {
+            id: uuidv4(),
+            income: budgetDetails.income,
+            title: `${budgetDetails.title}_copy`,
+            list: budgetList,
+            createdAt: todaysDate,
+        }
+
+        if (storedBudgetList) {
+            const parsedBudgetList = JSON.parse(storedBudgetList)
+
+            console.log({ parsedBudgetList })
+            stringifiedBudgetList = JSON.stringify([
+                ...parsedBudgetList,
+                uniqueBudget,
+            ])
+        } else {
+            stringifiedBudgetList = JSON.stringify([uniqueBudget])
+        }
+
+        localStorage.setItem('budgets', stringifiedBudgetList)
+
+        // show duplicate successful notification!
+    }
+
     useEffect(() => {
         if (selectedBudget) {
             setStep(4)
@@ -208,8 +238,12 @@ const BudgetModal = ({
                             </H1>
                             {step > 3 && (
                                 <AddNewBudgetItemButtons
+                                selectedBudget={selectedBudget}
                                     handleAddBtn={handleAddBtn}
                                     handleDeductBtn={handleDeductBtn}
+                                    handleDuplicateBudgetItem={
+                                        handleDuplicateBudgetItem
+                                    }
                                 />
                             )}
                         </div>

@@ -2,19 +2,26 @@ import clsx from 'clsx'
 import Button from '@/components/atoms/Button/Button'
 import AddIcon from '@/svgs/add.svg'
 import MinusIcon from '@/svgs/minus.svg'
+import DuplicateIcon from '@/svgs/duplicate.svg'
+import { Budget } from '@/utils/types'
 
-const button = '!p-0 !gap-x-0 !border-0 !w-10 !h-10 !rounded-[50%]'
-const icon = 'w-8 h-8 text-off-white'
+const button =
+    '!p-0 !gap-x-0 !border-0 !w-7 !h-7 md:!w-10 md:!h-10 !rounded-[50%]'
+const icon = 'w-6 h-6 md:w-8 md:h-8 text-off-white'
 
 const AddNewBudgetItemButtons = ({
+    selectedBudget,
     handleAddBtn,
     handleDeductBtn,
+    handleDuplicateBudgetItem,
 }: {
+    selectedBudget: Budget | null
     handleAddBtn: () => void
     handleDeductBtn: () => void
+    handleDuplicateBudgetItem: () => void
 }) => {
     return (
-        <div className="flex flex-1 justify-between max-w-[96px]">
+        <div className="flex flex-1 justify-between max-w-24 md:max-w-36">
             <Button
                 type="button"
                 icon={<AddIcon className={icon} />}
@@ -27,6 +34,14 @@ const AddNewBudgetItemButtons = ({
                 className={clsx(button, 'bg-red')}
                 onClick={handleDeductBtn}
             />
+            {selectedBudget && (
+                <Button
+                    type="button"
+                    icon={<DuplicateIcon className={icon} />}
+                    className={button}
+                    onClick={handleDuplicateBudgetItem}
+                />
+            )}
         </div>
     )
 }
