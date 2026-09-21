@@ -17,6 +17,7 @@ import styles from './BudgetItem.module.css'
 import { formatAmountWithCurrency } from '@/utils/format'
 
 interface BudgetItemInterface {
+    currency: string
     budgetItem: BudgetItemDetails
     isDefault?: boolean
     handleDelete?: (id: string) => void
@@ -28,6 +29,7 @@ interface BudgetItemInterface {
 }
 
 const BudgetItem = ({
+    currency,
     budgetItem,
     isDefault = false,
     handleDelete,
@@ -46,10 +48,15 @@ const BudgetItem = ({
         operation,
     } = budgetItem
 
+    console.log({ budgetItem })
+
     useEffect(() => {
         setDescription(defaultDescription)
         if (budgettedAmount) {
-            const formattedAmount = formatAmountWithCurrency(budgettedAmount)
+            const formattedAmount = formatAmountWithCurrency(
+                budgettedAmount,
+                currency
+            )
             setAmount(formattedAmount)
         }
     }, [])
@@ -105,7 +112,7 @@ const BudgetItem = ({
             setAmount('')
             return
         }
-        const formattedAmount = formatAmountWithCurrency(amountValue)
+        const formattedAmount = formatAmountWithCurrency(amountValue, currency)
         setAmount(formattedAmount)
     }
 

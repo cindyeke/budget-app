@@ -3,6 +3,7 @@ import { BudgetItemDetails } from '@/utils/types'
 import { formatAmountWithCurrency } from '@/utils/format'
 
 interface EquationProps {
+    currency: string
     income: number
     equationList: BudgetItemDetails[]
     isAmountFieldUpdated: boolean
@@ -10,6 +11,7 @@ interface EquationProps {
 }
 
 const Equations = ({
+    currency,
     income,
     equationList,
     isAmountFieldUpdated,
@@ -45,7 +47,7 @@ const Equations = ({
         <div className="mt-5 ml-8 mr-5 grid grid-cols-2 text-sm xs:text-base bg-off-white rounded-lg p-5">
             <span>Total</span>
             <span className="justify-self-end tracking-[2px]">
-                {formatAmountWithCurrency(amountLeft.toString())}
+                {formatAmountWithCurrency(amountLeft.toString(), currency)}
             </span>
         </div>
     )
