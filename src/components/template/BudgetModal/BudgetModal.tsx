@@ -174,35 +174,6 @@ const BudgetModal = ({
         setBudgetItemOperation(DEDUCT)
     }
 
-    // const handleDuplicateBudgetItem = () => {
-    //     let stringifiedBudgetList
-    //     const storedBudgetList = localStorage.getItem('budgets')
-
-    //     const uniqueBudget: Budget = {
-    //         id: uuidv4(),
-    //         income: budgetDetails.income,
-    //         title: `${budgetDetails.title}_copy`,
-    //         list: budgetList,
-    //         createdAt: todaysDate,
-    //     }
-
-    //     if (storedBudgetList) {
-    //         const parsedBudgetList = JSON.parse(storedBudgetList)
-
-    //         console.log({ parsedBudgetList })
-    //         stringifiedBudgetList = JSON.stringify([
-    //             ...parsedBudgetList,
-    //             uniqueBudget,
-    //         ])
-    //     } else {
-    //         stringifiedBudgetList = JSON.stringify([uniqueBudget])
-    //     }
-
-    //     localStorage.setItem('budgets', stringifiedBudgetList)
-
-    //     // show duplicate successful notification!
-    // }
-
     const [isEditingTitle, setIsEditingTitle] = useState(false)
 
     const handleEditBudgetTitle = () => {

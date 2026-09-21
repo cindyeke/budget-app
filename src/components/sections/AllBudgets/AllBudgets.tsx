@@ -1,7 +1,10 @@
+import { v4 as uuidv4 } from 'uuid'
 import Section from '@/components/template/Section/Section'
 import { Budget } from '@/utils/types'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import InfoCircle from '@/svgs/info-circle.svg'
+import DuplicateIcon from '@/svgs/duplicate.svg'
+import DeleteIcon from '@/svgs/delete.svg'
 
 const Budgets = ({
     isBudgetSaved,
@@ -22,6 +25,45 @@ const Budgets = ({
     const openBudget = (budget: Budget) => {
         setOpenBudgetModal(true)
         setSelectedBudget(budget)
+    }
+
+    const handleDuplicateBudget = (id: string) => {
+        const storedBudgetList = localStorage.getItem('budgets')
+
+        if (!storedBudgetList) return
+
+        const parsedBudgetList = JSON.parse(storedBudgetList) as Budget[]
+        let selectedBudget = parsedBudgetList.find((budget) => budget.id === id)
+
+        if (!selectedBudget) return
+
+        const newBudget = {
+            ...selectedBudget,
+            title: `${selectedBudget.title}_copy`,
+            id: uuidv4(),
+        }
+
+        const updatedBudgetList = [...parsedBudgetList, newBudget]
+
+        localStorage.setItem('budgets', JSON.stringify(updatedBudgetList))
+        setBudgets(updatedBudgetList)
+    }
+
+    const handleDeleteBudget = (id: string) => {
+        const storedBudgetList = localStorage.getItem('budgets')
+
+        if (!storedBudgetList) return
+
+        const parsedBudgetList = JSON.parse(storedBudgetList) as Budget[]
+        const updatedBudgetList = parsedBudgetList.filter(
+            (budget) => budget.id !== id
+        )
+
+        if (updatedBudgetList.length === parsedBudgetList.length) return
+
+        localStorage.setItem('budgets', JSON.stringify(updatedBudgetList))
+        setBudgets(updatedBudgetList)
+        setSelectedBudget((current) => (current?.id === id ? null : current))
     }
 
     useEffect(() => {
@@ -62,8 +104,20 @@ const Budgets = ({
                             >
                                 {budget.title}
                             </button>
-                            <div className="flex gap-x-2 text-xs text-black">
+                            <div className="flex gap-x-2 text-xs text-black items-center">
                                 <InfoCircle className="w-5 h-5" />
+                                <DuplicateIcon
+                                    className="w-5 h-5"
+                                    onClick={() =>
+                                        handleDuplicateBudget(budget.id ?? '')
+                                    }
+                                />
+                                <DeleteIcon
+                                    className="w-4 h-4"
+                                    onClick={() =>
+                                        handleDeleteBudget(budget.id ?? '')
+                                    }
+                                />
                             </div>
                         </div>
                     ))}
