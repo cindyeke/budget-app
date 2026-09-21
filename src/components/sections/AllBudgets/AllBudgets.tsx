@@ -1,6 +1,7 @@
 import Section from '@/components/template/Section/Section'
 import { Budget } from '@/utils/types'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import InfoCircle from '@/svgs/info-circle.svg'
 
 const Budgets = ({
     isBudgetSaved,
@@ -48,32 +49,23 @@ const Budgets = ({
         <Section>
             <div ref={budgetList} className="h-[95%] overflow-y-scroll">
                 <h2 className="text-[40px] leading-[45px] mb-8">all budgets</h2>
-                <div className="flex justify-end text-lightteal p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10 text-xs">
-                    <div className="flex gap-x-2">
-                        <span>created at</span>
-                        <span>updated at</span>
-                    </div>
-                </div>
+                <div className="flex justify-end text-lightteal p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10 text-xs"></div>
                 <div className="flex flex-col overflow-y-scroll h-[80%] content-start gap-y-2">
                     {budgets.map((budget) => (
-                        <button
-                            type="button"
+                        <div
                             key={budget.id}
-                            onClick={() => openBudget(budget)}
-                            className="flex justify-between text-lightteal p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10"
+                            className="flex justify-between items-center text-lightteal p-3 border-b border-b-gray/30 last:border-b-0 last:pb-10"
                         >
-                            <span className="text-left capitalize">
+                            <button
+                                className="text-left capitalize"
+                                onClick={() => openBudget(budget)}
+                            >
                                 {budget.title}
-                            </span>
-                            <div className="flex gap-x-2 text-xs">
-                                <span className="self-end">
-                                    {budget.createdAt}
-                                </span>
-                                <span className="self-end">
-                                    {budget.updatedAt ?? budget.createdAt}
-                                </span>
+                            </button>
+                            <div className="flex gap-x-2 text-xs text-black">
+                                <InfoCircle className="w-5 h-5" />
                             </div>
-                        </button>
+                        </div>
                     ))}
                 </div>
             </div>

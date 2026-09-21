@@ -2,19 +2,20 @@ import clsx from 'clsx'
 import { Path, UseFormRegister, FieldValues } from 'react-hook-form'
 import styles from './TextField.module.css'
 
-interface TextFieldProps {
+interface TextFieldProps<T extends FieldValues = FieldValues> {
     placeholder: string
     type: 'text' | 'number'
-    register: UseFormRegister<FieldValues>
-    name: Path<FieldValues>
+    register: UseFormRegister<T>
+    name: Path<T>
     className?: string
     required?: boolean
     requiredMessage?: string
     pattern?: RegExp
     patternMessage?: string
+    maxLength?: number
 }
 
-const TextField = ({
+const TextField = <T extends FieldValues = FieldValues>({
     placeholder,
     type,
     name,
@@ -24,7 +25,8 @@ const TextField = ({
     requiredMessage,
     pattern,
     patternMessage,
-}: TextFieldProps) => {
+    maxLength,
+}: TextFieldProps<T>) => {
     return (
         <input
             type={type}
@@ -38,6 +40,10 @@ const TextField = ({
                 pattern: pattern && {
                     value: pattern,
                     message: patternMessage || '',
+                },
+                maxLength: maxLength && {
+                    value: maxLength,
+                    message: `this field cannot be more than ${maxLength} characters`,
                 },
             })}
             autoComplete="off"

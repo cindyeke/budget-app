@@ -14,8 +14,9 @@ import Modal from '@/components/template/Modal/Modal'
 import ModalContent from '../Modal/ModalContent'
 import ModalControlButtons from '@/components/template/Modal/ModalControlButtons'
 import H1 from '@/components/atoms/H1/H1'
-import AddNewBudgetItemButtons from './AddNewBudgetItemButtons'
 import BudgetSteps from './BudgetSteps'
+import BudgetControlButton from './BudgetControlButton'
+import TextField from '@/components/atoms/TextField/TextField'
 
 interface NewBudgetModalProps {
     openBudgetModal: boolean
@@ -73,6 +74,7 @@ const BudgetModal = ({
                                   ...budgetItem,
                                   list: budgetList,
                                   updatedAt: todaysDate,
+                                  title,
                               }
                             : budgetItem
                 )
@@ -136,6 +138,7 @@ const BudgetModal = ({
         setIsAddNewButtonClicked(false)
         setBudgetItemOperation(ADD)
         setBudgetList([])
+        setIsEditingTitle(false)
     }
 
     const handleCloseModal = () => {
@@ -191,6 +194,13 @@ const BudgetModal = ({
         // show duplicate successful notification!
     }
 
+    const [isEditingTitle, setIsEditingTitle] = useState(false)
+
+    const handleEditBudgetTitle = () => {
+        setIsEditingTitle(true)
+        formMethods.setValue('title', '')
+    }
+
     useEffect(() => {
         if (selectedBudget) {
             setStep(4)
@@ -229,20 +239,26 @@ const BudgetModal = ({
                         <div
                             className={`flex mb-2 items-center justify-between ${step === 4 && 'pl-8 pr-5'}`}
                         >
-                            <H1
-                                className={clsx('font-bold !mb-0', {
-                                    'w-[70%] capitalize': step > 3,
-                                })}
-                            >
-                                {title(budgetDetails.title)}
-                            </H1>
+                            {isEditingTitle ? (
+                                <TextField
+                                    type="text"
+                                    placeholder="Enter new title"
+                                    name="title"
+                                    register={formMethods.register}
+                                    className="font-bold text-xl bg-transparent outline-none w-[70%] !border-0 ..."
+                                />
+                            ) : (
+                                <H1 className="font-bold !mb-0 text-xl w-[70%] capitalize">
+                                    {title(budgetDetails.title)}
+                                </H1>
+                            )}
                             {step > 3 && (
-                                <AddNewBudgetItemButtons
-                                selectedBudget={selectedBudget}
+                                <BudgetControlButton
+                                    selectedBudget={selectedBudget}
                                     handleAddBtn={handleAddBtn}
                                     handleDeductBtn={handleDeductBtn}
-                                    handleDuplicateBudgetItem={
-                                        handleDuplicateBudgetItem
+                                    handleEditBudgetTitle={
+                                        handleEditBudgetTitle
                                     }
                                 />
                             )}

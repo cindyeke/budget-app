@@ -75,6 +75,7 @@ export const StepTwo = () => {
                 name="title"
                 required
                 requiredMessage="budget name is required"
+                maxLength={12}
             />
             {errors?.title && (
                 <span className={errorMessageStyle}>
